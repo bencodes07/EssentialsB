@@ -1,0 +1,17 @@
+de\bencodes\commands\Command_Rename.class
+de\bencodes\listeners\onJoinListener.class
+de\bencodes\listeners\onKickListener.class
+de\bencodes\commands\Command_Gamemode.class
+de\bencodes\commands\Command_Give.class
+de\bencodes\config\CustomConfig.class
+de\bencodes\commands\Command_Invsee.class
+de\bencodes\listeners\onQuitListener.class
+de\bencodes\Essentials.class
+de\bencodes\listeners\onCommandListener.class
+de\bencodes\commands\Command_ChatClear.class
+de\bencodes\commands\Command_Pos.class
+de\bencodes\commands\Command_Day.class
+de\bencodes\commands\Command_Night.class
+de\bencodes\commands\Command_Commandspy.class
+de\bencodes\commands\Command_Fly.class
+de\bencodes\commands\Command_Kopf.class

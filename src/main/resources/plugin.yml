@@ -1,0 +1,27 @@
+name: EssentialsB_1.0
+version: '${project.version}'
+main: de.bencodes.Essentials
+api-version: '1.20'
+
+commands:
+  commandspy:
+    description: Spioniere die Commands anderer Leute
+    aliases:
+      - cmdspy:
+  clearchat:
+    description: Leere den Chat
+    aliases:
+      - chatclear:
+  gm:
+    description: Ändere deinen Spielmodus
+  kopf:
+    description: Hole dir jeden Kopf in Minecraft
+  invsee:
+    description: Sehe das inventar anderer
+  pos:
+    description: Speichere und lade Koordinaten
+  day:
+  night:
+  i:
+  fly:
+  rename:
