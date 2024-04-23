@@ -5,17 +5,7 @@
 
 package de.bencodes;
 
-import de.bencodes.commands.Command_ChatClear;
-import de.bencodes.commands.Command_Commandspy;
-import de.bencodes.commands.Command_Day;
-import de.bencodes.commands.Command_Fly;
-import de.bencodes.commands.Command_Gamemode;
-import de.bencodes.commands.Command_Give;
-import de.bencodes.commands.Command_Invsee;
-import de.bencodes.commands.Command_Kopf;
-import de.bencodes.commands.Command_Night;
-import de.bencodes.commands.Command_Pos;
-import de.bencodes.commands.Command_Rename;
+import de.bencodes.commands.*;
 import de.bencodes.config.CustomConfig;
 import de.bencodes.listeners.onCommandListener;
 import de.bencodes.listeners.onJoinListener;
@@ -47,6 +37,7 @@ public final class Essentials extends JavaPlugin {
         this.getCommand("i").setExecutor(new Command_Give());
         this.getCommand("fly").setExecutor(new Command_Fly());
         this.getCommand("rename").setExecutor(new Command_Rename());
+        this.getCommand("enderchest").setExecutor(new Command_Enderchest());
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new onCommandListener(), this);
         pm.registerEvents(new onJoinListener(), this);

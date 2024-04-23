@@ -6,12 +6,10 @@ api-version: '1.20'
 commands:
   commandspy:
     description: Spioniere die Commands anderer Leute
-    aliases:
-      - cmdspy:
+    alias: [cspy, cmdspy]
   clearchat:
     description: Leere den Chat
-    aliases:
-      - chatclear:
+    alias: [chatclear]
   gm:
     description: Ändere deinen Spielmodus
   kopf:
@@ -25,3 +23,6 @@ commands:
   i:
   fly:
   rename:
+  enderchest:
+    description: Öffne die Enderchest eines anderen Spielers
+    aliases: [ec, enderc, echest]
