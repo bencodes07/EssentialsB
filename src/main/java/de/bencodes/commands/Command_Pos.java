@@ -8,17 +8,14 @@ package de.bencodes.commands;
 import de.bencodes.Essentials;
 import de.bencodes.util.ItemBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.jetbrains.annotations.NotNull;
@@ -37,19 +34,17 @@ public class Command_Pos implements CommandExecutor, TabCompleter {
 
                 if (args.length == 0) {
                     if(!p.hasPermission("essentials.pos.test")) {
-                        p.sendMessage(Essentials.pre + "§cBenutze /pos <save | load> <PosName>");
+                        p.sendMessage(Essentials.pre + "§cBenutze /pos <save | load/unload | delete | modify> <PosName>");
                     }
                     Inventory inv = Bukkit.createInventory(null, 3*9, "§6Positionen");
                     inv.setItem(10, new ItemBuilder(Material.LIME_DYE).setDisplayname("§aPosition speichern").build());
                     p.openInventory(inv);
                 } else if (args.length == 1) {
-                    if (args[0].equalsIgnoreCase("list")) {
-                        p.sendMessage(Essentials.pre + "§6Positionen: " + Objects.requireNonNull(config.getConfigurationSection("Position")).getKeys(false));
-                    } else if (args[0].equalsIgnoreCase("unload")) {
+                    if (args[0].equalsIgnoreCase("unload")) {
                         p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
                         p.sendMessage(Essentials.pre + "§6Position wurde entladen");
                     }  else {
-                        p.sendMessage(Essentials.pre + "§cBenutze /pos <save | load> <PosName>");
+                        p.sendMessage(Essentials.pre + "§cBenutze /pos <save | load/unload | delete | modify> <PosName>");
                     }
                 } else if (args.length == 2) {
                     String posName = args[1];
@@ -59,43 +54,78 @@ public class Command_Pos implements CommandExecutor, TabCompleter {
                         config.set("Position." + posName + ".Z", p.getLocation().getZ());
                         config.set("Position." + posName + ".World", p.getLocation().getWorld().getName());
                         config.set("Position." + posName + ".Player", p.getName());
+                        config.set("Position." + posName + ".Public", false);
                         Essentials.getInstance().saveConfig();
                         p.sendMessage(Essentials.pre + "§6Die Position wurde gespeichert");
                     } else if (args[0].equalsIgnoreCase("load")) {
                         if (config.contains("Position." + posName)) {
-                            Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-                            // Display coordinates on scoreboard
-                            Objective objective = scoreboard.registerNewObjective(Essentials.getInstance().getName(), "positions");
-                            objective.setDisplaySlot(org.bukkit.scoreboard.DisplaySlot.SIDEBAR);
-                            objective.setDisplayName("§6§lPosition: §r§b" + posName);
-                            double x = config.getDouble("Position." + posName + ".X");
-                            int xValue = (int)x;
-                            double y = config.getDouble("Position." + posName + ".Y");
-                            int yValue = (int)y;
-                            double z = config.getDouble("Position." + posName + ".Z");
-                            int zValue = (int)z;
-                            objective.getScore("§7 X: §a" + xValue).setScore(4);
-                            objective.getScore("§7 Y: §a" + yValue).setScore(3);
-                            objective.getScore("§7 Z: §a" + zValue).setScore(2);
-                            objective.getScore("§7 World: §a" + (config.getString("Position." + posName + ".World").split("_")[1]).toString().substring(0,1).toUpperCase() + config.getString("Position." + posName + ".World").split("_")[1].toString().substring(1)).setScore(1); // Remove world_ prefix
-                            p.setScoreboard(scoreboard);
-//
-//                            double x = config.getDouble("Position." + posName + ".X");
-//                            int xValue = (int)x;
-//                            double y = config.getDouble("Position." + posName + ".Y");
-//                            int yValue = (int)y;
-//                            double z = config.getDouble("Position." + posName + ".Z");
-//                            int zValue = (int)z;
-//                            Location location = new Location(p.getWorld(), (double)xValue, (double)yValue, (double)zValue);
-//                            p.sendMessage(Essentials.pre + "§6Die Position lautet: X: " + location.getX() + "  Y: " + location.getY() + "  Z: " + location.getZ());
+                            String playerForPosition = config.getString("Position." + posName + ".Player");
+                            boolean isPublic = config.getBoolean("Position." + posName + ".Public", false);
+                            if (playerForPosition.equals(p.getName()) || isPublic) {
+                                Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+                                Objective objective = scoreboard.registerNewObjective(Essentials.getInstance().getName(), "positions");
+                                objective.setDisplaySlot(org.bukkit.scoreboard.DisplaySlot.SIDEBAR);
+                                objective.setDisplayName("§6§lPosition: §r§b" + posName);
+                                double x = config.getDouble("Position." + posName + ".X");
+                                int xValue = (int)x;
+                                double y = config.getDouble("Position." + posName + ".Y");
+                                int yValue = (int)y;
+                                double z = config.getDouble("Position." + posName + ".Z");
+                                int zValue = (int)z;
+                                objective.getScore("§7 X: §a" + xValue).setScore(4);
+                                objective.getScore("§7 Y: §a" + yValue).setScore(3);
+                                objective.getScore("§7 Z: §a" + zValue).setScore(2);
+                                objective.getScore("§7 World: §a" + (config.getString("Position." + posName + ".World").split("_")[1]).toString().substring(0,1).toUpperCase() + config.getString("Position." + posName + ".World").split("_")[1].toString().substring(1)).setScore(1); // Remove world_ prefix
+                                p.setScoreboard(scoreboard);
+                            } else {
+                                p.sendMessage(Essentials.pre + "§cDu hast keine Berechtigung für diese Position!");
+                            }
                         } else {
                             p.sendMessage(Essentials.pre + "§cDiese Position existiert nicht!");
                         }
-                    }else {
-                        p.sendMessage(Essentials.pre + "§cBenutze /pos <save | load> <PosName>");
+                    } else if (args[0].equalsIgnoreCase("delete")) {
+                        if (config.contains("Position." + posName)) {
+                            String playerForPosition = config.getString("Position." + posName + ".Player");
+                            if (playerForPosition.equals(p.getName())) {
+                                config.set("Position." + posName, null);
+                                Essentials.getInstance().saveConfig();
+                                p.sendMessage(Essentials.pre + "§6Die Position wurde gelöscht");
+                            } else {
+                                p.sendMessage(Essentials.pre + "§cDu hast keine Berechtigung um diese Position zu löschen!");
+                            }
+                        } else {
+                            p.sendMessage(Essentials.pre + "§cDiese Position existiert nicht!");
+                        }
+                    } else {
+                        p.sendMessage(Essentials.pre + "§cBenutze /pos <save | load/unload | delete | modify> <PosName>");
+                    }
+                } else if (args.length == 4 && args[0].equalsIgnoreCase("modify")) {
+                    String posName = args[1];
+                    if (config.contains("Position." + posName)) {
+                        String playerForPosition = config.getString("Position." + posName + ".Player");
+                        if (playerForPosition.equals(p.getName())) {
+                            String modificationType = args[2];
+                            if (modificationType.equalsIgnoreCase("public")) {
+                                boolean isPublic = Boolean.parseBoolean(args[3]);
+                                config.set("Position." + posName + ".Public", isPublic);
+                                Essentials.getInstance().saveConfig();
+                                p.sendMessage(Essentials.pre + "§6Die Position ist nun " + (isPublic ? "öffentlich" : "privat") + ".");
+                            } else if (modificationType.equalsIgnoreCase("displayName")) {
+                                String newDisplayName = args[3];
+                                config.set("Position." + posName + ".DisplayName", newDisplayName);
+                                Essentials.getInstance().saveConfig();
+                                p.sendMessage(Essentials.pre + "§6Der Name der Position wurde geändert.");
+                            } else {
+                                p.sendMessage(Essentials.pre + "§cInvalid modification type. Use 'public true/false' or 'displayName <NewDisplayName>'.");
+                            }
+                        } else {
+                            p.sendMessage(Essentials.pre + "§cDu hast keine Berechtigung um diese Position zu modifizieren!");
+                        }
+                    } else {
+                        p.sendMessage(Essentials.pre + "§cDiese Position existiert nicht!");
                     }
                 } else {
-                    p.sendMessage(Essentials.pre + "§cBenutze /pos <save | load> <PosName>");
+                    p.sendMessage(Essentials.pre + "§cBenutze /pos <save | load/unload | delete | modify> <PosName>");
                 }
             }
         }
@@ -106,71 +136,44 @@ public class Command_Pos implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> completions = new ArrayList<>();
+        FileConfiguration config = Essentials.getInstance().getConfig();
+        Set<String> positions = config.getConfigurationSection("Position").getKeys(false);
 
-        if (args.length == 1) {
-            completions.add("save");
-            completions.add("load");
-            completions.add("list");
-            completions.add("unload");
-        } else if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("load")) {
-                FileConfiguration config = Essentials.getInstance().getConfig();
-                Set<String> positions = Objects.requireNonNull(config.getConfigurationSection("Position")).getKeys(false);
-                completions.addAll(positions);
+        Player player = (Player) sender;
+
+        if (sender instanceof Player) {
+            if (args.length == 1) {
+                completions.add("save");
+                completions.add("load");
+                completions.add("unload");
+                completions.add("delete");
+                completions.add("modify");
+
+                completions.removeIf(s -> !s.toLowerCase().startsWith(args[0].toLowerCase()));
+                Collections.sort(completions);
+                return completions;
+            } else if (args.length == 2) {
+                if (args[0].equalsIgnoreCase("load") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("modify")) {
+                    for (String posName : positions) {
+                        String playerForPosition = config.getString("Position." + posName + ".Player");
+                        boolean isPublic = config.getBoolean("Position." + posName + ".Public", false);
+                        if ((playerForPosition != null && playerForPosition.equals(player.getName())) || isPublic) {
+                            completions.add(posName);
+                        }
+                    }
+                } else if (args[0].equalsIgnoreCase("save")) {
+                    completions.add("<PosName>");
+                }
+            } else if (args.length == 3 && args[0].equalsIgnoreCase("modify")) {
+                completions.add("public");
+                completions.add("displayName");
+            } else if (args.length == 4 && args[0].equalsIgnoreCase("modify")) {
+                if (args[2].equalsIgnoreCase("public")) {
+                    completions.add("true");
+                    completions.add("false");
+                }
             }
         }
-
         return completions;
     }
 }
-
-/*
- * --- TODOS: ---
- * - Add a method to remove a position
- * - Add a method to list all positions accessible by a player
- * - Add a method to modify a positions name or coordinates
- * - Add a method to teleport to a position
- * - Add a method make a position public or private
- */
-
-// Make sure your class implements TabCompleter.
-//public class Test implements TabCompleter {
-//    public List<String> onTabComplete(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-//        List<String> list = new ArrayList<>();
-//        // Now, it's just like any other command.
-//        // Check if the sender is a player.
-//        if (sender instanceof Player) {
-//            // Check if the command is "something."
-//            if (cmd.getName().equalsIgnoreCase("command")) {
-//                // If the player has not typed anything in
-//                if (args.length == 0) {
-//                    // Add a list of words that you'd like to show up
-//                    // when the player presses tab.
-//                    list.add("hello");
-//                    list.add("hello2");
-//                    // Sort them alphabetically.
-//                    Collections.sort(list);
-//                    // return the list.
-//                    return list;
-//                    // If player has typed one word in.
-//                    // This > "/command hello " does not count as one
-//                    // argument because of the space after the hello.
-//                } else if (args.length == 1) {
-//                    list.add("hello");
-//                    list.add("hello2");
-//                    for (String s : list){
-//                        // Since the player has already typed something in,
-//                        // we ant to complete the word for them so we check startsWith().
-//                        if (!s.toLowerCase().startsWith(args[0].toLowerCase())){
-//                            list.remove(s);
-//                        }
-//                    }
-//                    Collections.sort(list);
-//                    return list;
-//                }
-//            }
-//        }
-//        // return null at the end.
-//        return null;
-//    }
-//}
