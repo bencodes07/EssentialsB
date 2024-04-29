@@ -3,7 +3,6 @@ de\bencodes\listeners\onJoinListener.class
 de\bencodes\listeners\onKickListener.class
 de\bencodes\commands\Command_Gamemode.class
 de\bencodes\commands\Command_Give.class
-de\bencodes\model\Board.class
 de\bencodes\config\CustomConfig.class
 de\bencodes\commands\Command_Invsee.class
 de\bencodes\listeners\onQuitListener.class

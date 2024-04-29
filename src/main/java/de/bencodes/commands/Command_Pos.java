@@ -33,12 +33,7 @@ public class Command_Pos implements CommandExecutor, TabCompleter {
                 FileConfiguration config = Essentials.getInstance().getConfig();
 
                 if (args.length == 0) {
-                    if(!p.hasPermission("essentials.pos.test")) {
-                        p.sendMessage(Essentials.pre + "§cBenutze /pos <save | load/unload | delete | modify> <PosName>");
-                    }
-                    Inventory inv = Bukkit.createInventory(null, 3*9, "§6Positionen");
-                    inv.setItem(10, new ItemBuilder(Material.LIME_DYE).setDisplayname("§aPosition speichern").build());
-                    p.openInventory(inv);
+                    p.sendMessage(Essentials.pre + "§cBenutze /pos <save | load/unload | delete | modify> <PosName>");
                 } else if (args.length == 1) {
                     if (args[0].equalsIgnoreCase("unload")) {
                         p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
@@ -161,6 +156,7 @@ public class Command_Pos implements CommandExecutor, TabCompleter {
                             completions.add(posName);
                         }
                     }
+                    Collections.sort(completions);
                 } else if (args[0].equalsIgnoreCase("save")) {
                     completions.add("<PosName>");
                 }
