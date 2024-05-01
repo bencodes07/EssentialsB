@@ -23,6 +23,7 @@ commands:
   i:
   fly:
   rename:
+  heal:
   vanish:
     description: Mache dich unsichtbar
     aliases: [v, vanishmode]
