@@ -15,6 +15,5 @@ public class onCommandListener implements Listener {
         if (p.hasMetadata("cmdspy")) {
             p.sendMessage("§6" + e.getPlayer().getName() + " §c -> §7 " + e.getMessage());
         }
-
     }
 }

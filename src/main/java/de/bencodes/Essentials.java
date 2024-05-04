@@ -38,7 +38,7 @@ public final class Essentials extends JavaPlugin {
         this.getCommand("fly").setExecutor(new Command_Fly());
         this.getCommand("rename").setExecutor(new Command_Rename());
         this.getCommand("enderchest").setExecutor(new Command_Enderchest());
-        this.getCommand("vanish").setExecutor(new Command_Vanish());
+        //this.getCommand("vanish").setExecutor(new Command_Vanish());
         this.getCommand("heal").setExecutor(new Command_Heal());
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new onCommandListener(), this);

@@ -24,9 +24,6 @@ commands:
   fly:
   rename:
   heal:
-  vanish:
-    description: Mache dich unsichtbar
-    aliases: [v, vanishmode]
   enderchest:
     description: Öffne die Enderchest eines anderen Spielers
     aliases: [ec, enderc, echest]
