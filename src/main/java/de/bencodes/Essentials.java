@@ -7,6 +7,7 @@ package de.bencodes;
 
 import de.bencodes.commands.*;
 import de.bencodes.config.CustomConfig;
+import de.bencodes.listeners.PositionGUIListener;
 import de.bencodes.listeners.onCommandListener;
 import de.bencodes.listeners.onJoinListener;
 import de.bencodes.listeners.onKickListener;
@@ -45,6 +46,7 @@ public final class Essentials extends JavaPlugin {
         pm.registerEvents(new onJoinListener(), this);
         pm.registerEvents(new onQuitListener(), this);
         pm.registerEvents(new onKickListener(), this);
+        pm.registerEvents(new PositionGUIListener(), this);
         this.getConfig().options().copyDefaults();
         this.saveDefaultConfig();
         CustomConfig.setup();

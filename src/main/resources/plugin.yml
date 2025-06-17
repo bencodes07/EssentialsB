@@ -1,15 +1,15 @@
 name: EssentialsB_1.0
 version: '${project.version}'
 main: de.bencodes.Essentials
-api-version: '1.20'
+api-version: '1.21'
 
 commands:
   commandspy:
     description: Spioniere die Commands anderer Leute
-    alias: [cspy, cmdspy]
+    aliases: [cspy, cmdspy]
   clearchat:
     description: Leere den Chat
-    alias: [chatclear]
+    aliases: [chatclear]
   gm:
     description: Ändere deinen Spielmodus
   kopf:
